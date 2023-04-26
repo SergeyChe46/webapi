@@ -9,16 +9,4 @@ public class HomeController : ControllerBase
     {
         return "ActionResult<string>";
     }
-
-    public ActionResult<Note> GetNote()
-    {
-        Note note = new Note
-        {
-            NoteId = 1,
-            Title = "Title",
-            Description = "Description",
-            CreatedAt = DateTime.Now
-        };
-        return note;
-    }
 }
