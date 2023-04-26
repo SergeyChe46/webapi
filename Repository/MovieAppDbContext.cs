@@ -6,17 +6,8 @@ namespace webapi.Repository
 {
     public class MovieAppDbContext : DbContext
     {
-        protected IConfiguration Configuration { get; set; }
-
-        public MovieAppDbContext(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-        }
+        public MovieAppDbContext(DbContextOptions<MovieAppDbContext> options)
+            : base(options) { }
 
         public DbSet<Movie> Movies { get; set; }
     }
