@@ -4,20 +4,16 @@ namespace webapi.Repository
 {
     public interface IRepository
     {
-        IQueryable<Movie> GetMovies();
+        Task<IQueryable<Movie>> GetMovies();
 
-        Movie GetMovie(int id);
+        Task<Movie> GetMovie(string title);
 
-        bool MovieExists(int id);
+        Task<bool> MovieExists(int id);
 
-        bool MovieExists(string title);
+        Task CreateMovie(Movie movie);
 
-        bool CreateMovie(Movie movie);
+        Task UpdateMovie(Movie movie);
 
-        bool UpdateMovie(Movie movie);
-
-        bool DeleteMovie(Movie movie);
-
-        bool Save();
+        Task DeleteMovie(Movie movie);
     }
 }

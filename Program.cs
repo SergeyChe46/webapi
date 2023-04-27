@@ -15,6 +15,8 @@ builder.Services.AddTransient<IRepository, MovieRepository>();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MovieAppDbContext>(x =>
         x.UseNpgsql(connectionString)
+        .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+        .EnableSensitiveDataLogging()
 );
 
 var app = builder.Build();

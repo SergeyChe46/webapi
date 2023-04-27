@@ -1,4 +1,5 @@
-﻿using webapi.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using webapi.Models;
 
 namespace webapi.Repository
 {
@@ -10,48 +11,37 @@ namespace webapi.Repository
         {
             _db = db;
         }
-        public bool CreateMovie(Movie movie)
+        public async Task CreateMovie(Movie movie)
         {
             _db.Movies.Add(movie);
-            return Save();
+            await _db.SaveChangesAsync();
         }
 
-        public bool DeleteMovie(Movie movie)
+        public async Task DeleteMovie(Movie movie)
         {
             _db.Movies.Remove(movie);
-            return Save();
+            await _db.SaveChangesAsync();
         }
 
-        public IQueryable<Movie> GetMovies()
+        public async Task<IQueryable<Movie>> GetMovies()
         {
             return _db.Movies.AsQueryable();
         }
 
-        public bool Save()
-        {
-            return _db.SaveChanges() >= 0 ? true : false;
-        }
-
-        public bool UpdateMovie(Movie movie)
+        public async Task UpdateMovie(Movie movie)
         {
             _db.Movies.Update(movie);
-            return Save();
+            await _db.SaveChangesAsync();
         }
 
-        public bool MovieExists(int id)
+        public async Task<bool> MovieExists(int id)
         {
-            return _db.Movies.Any(x => x.Id == id);
+            return await _db.Movies.AnyAsync(x => x.Id == id);
         }
 
-        public Movie GetMovie(int id)
+        public async Task<Movie> GetMovie(string title)
         {
-            return _db.Movies.FirstOrDefault(x => x.Id == id);
-        }
-
-        public bool MovieExists(string title)
-        {
-            bool value = _db.Movies.Any(y => y.Title.ToLower().Trim() == title.ToLower().Trim());
-            return value;
+            return await _db.Movies.FirstOrDefaultAsync(m => m.Title == title);
         }
     }
 }
