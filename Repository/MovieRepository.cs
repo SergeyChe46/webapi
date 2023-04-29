@@ -39,7 +39,7 @@ namespace webapi.Repository
             return await _db.Movies.AnyAsync(x => x.Id == id);
         }
 
-        public async Task<Movie> GetMovie(string title)
+        public async Task<Movie?> GetMovie(string title)
         {
             return await _db.Movies.FirstOrDefaultAsync(m => m.Title == title);
         }

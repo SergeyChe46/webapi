@@ -6,7 +6,7 @@ namespace webapi.Repository
     {
         Task<IQueryable<Movie>> GetMovies();
 
-        Task<Movie> GetMovie(string title);
+        Task<Movie?> GetMovie(string title);
 
         Task CreateMovie(Movie movie);
 
