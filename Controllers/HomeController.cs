@@ -17,9 +17,9 @@ public class HomeController : ControllerBase
     /// Get list of all Movies
     /// </summary>
     [HttpGet]
-    public IQueryable Get()
+    public IQueryable? Get()
     {
-        return _movieRepo.GetMovies();
+        return _movieRepo.GetMovies() as IQueryable;
     }
 
     /// <summary>
@@ -30,13 +30,9 @@ public class HomeController : ControllerBase
     {
         if (movie == null)
             return BadRequest(ModelState);
-        if (_movieRepo.MovieExists(movie.Title))
-        {
-            ModelState.AddModelError("", "Movie already Exist");
-            return StatusCode(500, ModelState);
-        }
+        
 
-        if (!_movieRepo.CreateMovie(movie))
+        if (_movieRepo.CreateMovie(movie))
         {
             ModelState.AddModelError("", $"Something went wrong while saving movie record of {movie.Title}");
             return StatusCode(500, ModelState);
