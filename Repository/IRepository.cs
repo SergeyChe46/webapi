@@ -8,6 +8,8 @@ namespace webapi.Repository
 
         Task<Movie?> GetMovie(string title);
 
+        Task<bool> MovieExists(int id);
+        
         Task CreateMovie(Movie movie);
 
         Task UpdateMovie(Movie movie);
