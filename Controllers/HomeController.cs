@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using webapi.MappingConfiguration;
 using webapi.Models;
 using webapi.Repository;
 
@@ -17,33 +19,27 @@ public class HomeController : ControllerBase
     /// Get list of all Movies
     /// </summary>
     [HttpGet]
-    public IQueryable Get()
+    public IQueryable? Get()
     {
-        return _movieRepo.GetMovies();
+        return _movieRepo.GetMovies() as IQueryable;
     }
 
     /// <summary>
     /// Create a new movie
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Movie movie)
+    public async Task<IActionResult> Post([FromBody] MovieViewModel movie)
     {
+        var mapper = MovieMapping.IntializeMovieMapper();
+        
         if (movie == null)
             return BadRequest(ModelState);
-        if (_movieRepo.MovieExists(movie.Title))
-        {
-            ModelState.AddModelError("", "Movie already Exist");
-            return StatusCode(500, ModelState);
-        }
+        
+        var movieDTO = mapper.Map<Movie>(movie);
 
-        if (!_movieRepo.CreateMovie(movie))
-        {
-            ModelState.AddModelError("", $"Something went wrong while saving movie record of {movie.Title}");
-            return StatusCode(500, ModelState);
-        }
-
-        return Ok(movie);
-
+        await _movieRepo.CreateMovie(movieDTO);
+        
+        return Ok(movieDTO);
     }
 
     /// <summary>
@@ -51,40 +47,33 @@ public class HomeController : ControllerBase
     /// </summary>
     /// <return></return>
     [HttpPut("{movieId:int}")]
-    public IActionResult Update(int movieId, [FromBody] Movie movie)
+    public IActionResult Update(int movieId, [FromBody] MovieViewModel movie)
     {
-        if (movie == null || movieId != movie.Id)
-            return BadRequest(ModelState);
-
-        if (!_movieRepo.UpdateMovie(movie))
-        {
-            ModelState.AddModelError("", $"Something went wrong while updating movie : {movie.Title}");
-            return StatusCode(500, ModelState);
-        }
-
-        return NoContent();
+        var mapper = MovieMapping.IntializeMovieMapper();
+        var movieDTO = mapper.Map<Movie>(movie);
+        _movieRepo.UpdateMovie(movieDTO);
+        
+        return Ok(movieDTO);
     }
 
     /// <summary>
     /// Update a movie
     /// </summary>
     /// <return></return>
-    [HttpDelete("{movieId:int}")]
-    public IActionResult Delete(int movieId)
+    [HttpDelete("{title:alpha}")]
+    public async Task<IActionResult> Delete(string title, int id)
     {
-        if (!_movieRepo.MovieExists(movieId))
+        if (!(await _movieRepo.MovieExists(id)))
         {
             return NotFound();
         }
 
-        var movieobj = _movieRepo.GetMovie(movieId);
-
-        if (!_movieRepo.DeleteMovie(movieobj))
+        var movieobj = await _movieRepo.GetMovie(title);
+        if(movieobj != null)
         {
-            ModelState.AddModelError("", $"Something went wrong while deleting movie : {movieobj.Title}");
-            return StatusCode(500, ModelState);
+            await _movieRepo.DeleteMovie(movieobj);
+            return Ok();
         }
-
         return NoContent();
     }
 }
