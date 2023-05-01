@@ -4,7 +4,7 @@ namespace webapi.Repository
 {
     public interface IRepository
     {
-        Task<IQueryable<Movie>> GetMovies();
+        Task<List<Movie>> GetMovies();
 
         Task<Movie?> GetMovie(string title);
 

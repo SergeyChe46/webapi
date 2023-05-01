@@ -19,7 +19,6 @@ builder.Services.AddDbContext<MovieAppDbContext>(x =>
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -28,6 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

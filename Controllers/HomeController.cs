@@ -22,9 +22,9 @@ public class HomeController : ControllerBase
     /// Get list of all Movies
     /// </summary>
     [HttpGet]
-    public IQueryable? Get()
+    public async Task<List<Movie>>? Get()
     {
-        return _movieRepo.GetMovies() as IQueryable;
+        return await _movieRepo.GetMovies();
     }
 
     /// <summary>

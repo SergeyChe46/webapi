@@ -23,9 +23,9 @@ namespace webapi.Repository
             await _db.SaveChangesAsync();
         }
 
-        public async Task<IQueryable<Movie>> GetMovies()
+        public async Task<List<Movie>> GetMovies()
         {
-            return _db.Movies.AsQueryable();
+            return await _db.Movies.ToListAsync();
         }
 
         public async Task UpdateMovie(Movie movie)
