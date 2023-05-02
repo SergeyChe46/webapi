@@ -8,11 +8,11 @@ using webapi.Repository;
 namespace webapi;
 [Route("[controller]/{action}")]
 [ApiController]
-public class HomeController : ControllerBase
+public class MovieController : ControllerBase
 {
-    private readonly IRepository _movieRepo;
+    private readonly IMovieRepository _movieRepo;
     private readonly Logger logger;
-    public HomeController(IRepository movieRepo)
+    public MovieController(IMovieRepository movieRepo)
     {
         _movieRepo = movieRepo;
         logger = LogManager.GetCurrentClassLogger();

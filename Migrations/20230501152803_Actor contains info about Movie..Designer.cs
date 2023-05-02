@@ -12,17 +12,43 @@ using webapi.Repository;
 namespace webapi.Migrations
 {
     [DbContext(typeof(MovieAppDbContext))]
-    [Migration("20230426135538_FixDatabaseName")]
-    partial class FixDatabaseName
+    [Migration("20230501152803_Actor contains info about Movie.")]
+    partial class ActorcontainsinfoaboutMovie
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.16")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("webapi.Models.Actor", b =>
+                {
+                    b.Property<int>("ActorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ActorId"));
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("MovieId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ActorId");
+
+                    b.HasIndex("FullName")
+                        .IsUnique();
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("Actors");
+                });
 
             modelBuilder.Entity("webapi.Models.Movie", b =>
                 {
@@ -48,7 +74,24 @@ namespace webapi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Title")
+                        .IsUnique();
+
                     b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("webapi.Models.Actor", b =>
+                {
+                    b.HasOne("webapi.Models.Movie", "Movie")
+                        .WithMany("Actors")
+                        .HasForeignKey("MovieId");
+
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("webapi.Models.Movie", b =>
+                {
+                    b.Navigation("Actors");
                 });
 #pragma warning restore 612, 618
         }

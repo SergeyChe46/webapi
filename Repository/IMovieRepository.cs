@@ -2,7 +2,7 @@
 
 namespace webapi.Repository
 {
-    public interface IRepository
+    public interface IMovieRepository
     {
         Task<List<Movie>> GetMovies();
 

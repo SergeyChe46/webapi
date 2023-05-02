@@ -4,13 +4,16 @@
 
 namespace webapi.Migrations
 {
-    public partial class FixDatabaseName : Migration
+    /// <inheritdoc />
+    public partial class ActorcontainsinfoaboutMovie : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
 

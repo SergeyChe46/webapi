@@ -12,8 +12,8 @@ using webapi.Repository;
 namespace webapi.Migrations
 {
     [DbContext(typeof(MovieAppDbContext))]
-    [Migration("20230427204428_CreateUniqueIndex")]
-    partial class CreateUniqueIndex
+    [Migration("20230501143806_Initial migration.")]
+    partial class Initialmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,41 @@ namespace webapi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ActorMovie", b =>
+                {
+                    b.Property<int>("ActorsActorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MoviesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ActorsActorId", "MoviesId");
+
+                    b.HasIndex("MoviesId");
+
+                    b.ToTable("ActorMovie");
+                });
+
+            modelBuilder.Entity("webapi.Models.Actor", b =>
+                {
+                    b.Property<int>("ActorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ActorId"));
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ActorId");
+
+                    b.HasIndex("FullName")
+                        .IsUnique();
+
+                    b.ToTable("Actors");
+                });
 
             modelBuilder.Entity("webapi.Models.Movie", b =>
                 {
@@ -52,6 +87,21 @@ namespace webapi.Migrations
                         .IsUnique();
 
                     b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("ActorMovie", b =>
+                {
+                    b.HasOne("webapi.Models.Actor", null)
+                        .WithMany()
+                        .HasForeignKey("ActorsActorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("webapi.Models.Movie", null)
+                        .WithMany()
+                        .HasForeignKey("MoviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

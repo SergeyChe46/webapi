@@ -10,5 +10,6 @@ namespace webapi.Repository
             : base(options) { }
 
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Actor> Actors { get; set; }
     }
 }

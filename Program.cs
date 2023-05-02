@@ -11,7 +11,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IRepository, MovieRepository>();
+builder.Services.AddTransient<IMovieRepository, MovieRepository>();
+builder.Services.AddTransient<IActorRepository, ActorRepository>();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MovieAppDbContext>(x =>
         x.UseNpgsql(connectionString)

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using webapi.Repository;
@@ -11,9 +12,11 @@ using webapi.Repository;
 namespace webapi.Migrations
 {
     [DbContext(typeof(MovieAppDbContext))]
-    partial class MovieAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230501151156_Add Movies list from Actor class")]
+    partial class AddMovieslistfromActorclass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,12 +30,12 @@ namespace webapi.Migrations
                     b.Property<int>("ActorsActorId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MovieId")
+                    b.Property<int>("MoviesId")
                         .HasColumnType("integer");
 
-                    b.HasKey("ActorsActorId", "MovieId");
+                    b.HasKey("ActorsActorId", "MoviesId");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex("MoviesId");
 
                     b.ToTable("ActorMovie");
                 });
@@ -97,7 +100,7 @@ namespace webapi.Migrations
 
                     b.HasOne("webapi.Models.Movie", null)
                         .WithMany()
-                        .HasForeignKey("MovieId")
+                        .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

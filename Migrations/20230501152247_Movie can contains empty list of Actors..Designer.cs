@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using webapi.Repository;
@@ -11,9 +12,11 @@ using webapi.Repository;
 namespace webapi.Migrations
 {
     [DbContext(typeof(MovieAppDbContext))]
-    partial class MovieAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230501152247_Movie can contains empty list of Actors.")]
+    partial class MoviecancontainsemptylistofActors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace webapi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("ActorMovie", b =>
-                {
-                    b.Property<int>("ActorsActorId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ActorsActorId", "MovieId");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("ActorMovie");
-                });
 
             modelBuilder.Entity("webapi.Models.Actor", b =>
                 {
@@ -49,10 +37,15 @@ namespace webapi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("MovieId")
+                        .HasColumnType("integer");
+
                     b.HasKey("ActorId");
 
                     b.HasIndex("FullName")
                         .IsUnique();
+
+                    b.HasIndex("MovieId");
 
                     b.ToTable("Actors");
                 });
@@ -87,19 +80,18 @@ namespace webapi.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("ActorMovie", b =>
+            modelBuilder.Entity("webapi.Models.Actor", b =>
                 {
-                    b.HasOne("webapi.Models.Actor", null)
-                        .WithMany()
-                        .HasForeignKey("ActorsActorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("webapi.Models.Movie", "Movie")
+                        .WithMany("Actors")
+                        .HasForeignKey("MovieId");
 
-                    b.HasOne("webapi.Models.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("webapi.Models.Movie", b =>
+                {
+                    b.Navigation("Actors");
                 });
 #pragma warning restore 612, 618
         }

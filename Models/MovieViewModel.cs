@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace webapi.Models
+﻿namespace webapi.Models
 {
     public class MovieViewModel
     {
